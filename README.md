@@ -11,7 +11,7 @@
 - 代码完全开源 可以自由更改自用
 - 如果你需要二次分发 方便的话希望您可以在某个不起眼的角落提我一句~！
 - UI主要是AI写的 所以工作量不大 目前没遇到BUG
-- 值得注意的是 <code>index_online.html</code> 可以通过Github Pages部署，只需删除除它以外的文件，然后将它命名为<code>index.html即可</code>
+- 值得注意的是 **index_online.html** 可以通过Github Pages部署，只需删除除它以外的文件，然后将它命名为 **index.html** 即可
 
 ### 使用教程：
 1. 从此页面下载源码
@@ -31,7 +31,7 @@
 - Fully open-source code for free customization  
 - If redistributed, please mention me in an inconspicuous corner!  
 - UI primarily AI-generated (minimal workload), currently bug-free
-- It's worth noting that <code>index_online.html</code> can be deployed via Github Pages, just delete the file other than it and name it <code>index.html</code>
+- It's worth noting that **index_online.html** can be deployed via Github Pages, just delete the file other than it and name it **index.html**
 
 ### How to use？  
 1. Download source code from this page  
