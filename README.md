@@ -18,6 +18,10 @@
 2. 解压压缩包
 3. 使用浏览器打开HTML文件
 4. 享受它
+
+### 在线使用:
+> 这些网站均非本人搭建，不保证永久有效！
+- https://redstone.22web.org/
 ---
 ## English:
 **Brief Description:** A tool for designing 2D Minecraft redstone contraptions (monostable) in the browser  
@@ -38,3 +42,7 @@
 2. Extract the zip file  
 3. Open the HTML file in a browser  
 4. Enjoy!
+
+### Online Usage:
+These websites were not built by me, and I cannot guarantee that they will be permanently available!
+- https://redstone.22web.org/
