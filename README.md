@@ -21,9 +21,8 @@
 
 ### 在线使用
 
-> 注意：这些网站均由社区用户搭建，不保证永久有效！
-
 - https://redstone.22web.org/
+- https://rseditor.zxbhello.top/
 
 ### 本地使用
 
