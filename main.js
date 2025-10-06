@@ -112,10 +112,16 @@ const canvasSize = 64; // 64x64网格
         
         // 设置画布事件监听器
         function setupCanvasEventListeners() {
+            //针对电脑
             canvas.addEventListener('mousedown', handleMouseDown);
             canvas.addEventListener('mousemove', handleMouseMove);
             canvas.addEventListener('mouseup', handleMouseUp);
             canvas.addEventListener('wheel', handleMouseWheel);
+            //针对触屏
+            canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+            canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+            canvas.addEventListener('touchend', handleTouchEnd);
+                
             window.addEventListener('resize', resizeCanvas);
         }
         
@@ -186,6 +192,116 @@ const canvasSize = 64; // 64x64网格
         function handleMouseUp(e) {
             isDragging = false;
             canvas.style.cursor = 'default';
+        }
+
+        // 触摸开始事件
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touches = e.touches;
+            const rect = canvas.getBoundingClientRect();
+        
+            if (touches.length === 1) {// 单点=拖动
+                isDragging = true;
+                dragStartX = touches[0].clientX - offsetX;
+                dragStartY = touches[0].clientY - offsetY;
+                canvas.style.cursor = 'grabbing';
+            } else if (touches.length === 2) {// 双点=缩放
+                
+                isDragging = false;
+                const touch1 = touches[0];
+                const touch2 = touches[1];
+                // 计算两指中心点
+                const centerX = (touch1.clientX + touch2.clientX) / 2;
+                const centerY = (touch1.clientY + touch2.clientY) / 2;
+                // 计算初始两指距离
+                const dx = touch1.clientX - touch2.clientX;
+                const dy = touch1.clientY - touch2.clientY;
+                initialTouchDistance = Math.sqrt(dx * dx + dy * dy);
+                initialCanvasScale = canvasScale;
+                touchCenterX = centerX;
+                touchCenterY = centerY;
+            }
+        
+            // 单点放置
+            if (touches.length === 1) {
+                const x = touches[0].clientX - rect.left;
+                const y = touches[0].clientY - rect.top;
+                const gridX = Math.floor((x - offsetX) / (tileSize * canvasScale));
+                const gridY = Math.floor((y - offsetY) / (tileSize * canvasScale));
+        
+                if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
+                    const key = `${gridX},${gridY}`;
+                    if (grid[key] === selectedComponent) {
+                        delete grid[key]; // 移除
+                    } else if (selectedComponent !== 'air') {
+                        grid[key] = selectedComponent; // 放置
+                    }
+                    hasChanges = true;
+                    updateStatusBar();
+                }
+            }
+        }
+        
+        // 触摸移动事件
+        function handleTouchMove(e) {
+            e.preventDefault(); 
+            const touches = e.touches;
+            const rect = canvas.getBoundingClientRect();
+        
+            if (touches.length === 1 && isDragging) {
+                //拖动画布
+                offsetX = touches[0].clientX - dragStartX;
+                offsetY = touches[0].clientY - dragStartY;
+        
+                // 更新光标位置
+                const x = touches[0].clientX - rect.left;
+                const y = touches[0].clientY - rect.top;
+                const gridX = Math.floor((x - offsetX) / (tileSize * canvasScale));
+                const gridY = Math.floor((y - offsetY) / (tileSize * canvasScale));
+                if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
+                    document.querySelector('#cursor-position span').textContent = `坐标: ${gridX}, ${gridY}`;
+                } else {
+                    document.querySelector('#cursor-position span').textContent = `坐标: 0, 0`;
+                }
+            } else if (touches.length === 2) {
+                // 缩放
+                const touch1 = touches[0];
+                const touch2 = touches[1];
+                // 计算当前两指距离
+                const dx = touch1.clientX - touch2.clientX;
+                const dy = touch1.clientY - touch2.clientY;
+                const currentDistance = Math.sqrt(dx * dx + dy * dy);
+                // 计算缩放比例
+                const scaleChange = currentDistance / initialTouchDistance;
+                const newScale = initialCanvasScale * scaleChange;
+                // 限制缩放范围
+                canvasScale = Math.max(0.1, Math.min(2.0, newScale));
+        
+                // 计算两指中心点
+                const centerX = (touch1.clientX + touch2.clientX) / 2;
+                const centerY = (touch1.clientY + touch2.clientY) / 2;
+                // 计算相对于画布的位置
+                const canvasX = centerX - rect.left;
+                const canvasY = centerY - rect.top;
+                // 计算缩放前中心点的网格坐标
+                const gridCenterX = (canvasX - offsetX) / (tileSize * initialCanvasScale);
+                const gridCenterY = (canvasY - offsetY) / (tileSize * initialCanvasScale);
+                // 计算缩放后中心点位置
+                offsetX = canvasX - gridCenterX * tileSize * canvasScale;
+                offsetY = canvasY - gridCenterY * tileSize * canvasScale;
+        
+                updateZoomDisplay();
+            }
+        }
+        
+        // 触摸结束事件
+        function handleTouchEnd(e) {
+            isDragging = false;
+            canvas.style.cursor = 'default';
+            initialTouchDistance = null;
+            initialCanvasScale = null;
+            touchCenterX = null;
+            touchCenterY = null;
         }
         
         // 鼠标滚轮事件（缩放）
