@@ -1,5 +1,3 @@
-import { components } from './components.js';
-
 const canvasSize = 64; // 64x64网格
         const tileSize = 30; // 每个网格30像素
         const grid = new Array(canvasSize * canvasSize).fill('air');
