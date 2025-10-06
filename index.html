@@ -1324,6 +1324,8 @@ your-project/
             canvas = document.getElementById('canvas');
             ctx = canvas.getContext('2d');
             ctx.imageSmoothingEnabled = false;
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.mozImageSmoothingEnabled = false;
             // 设置画布尺寸为容器大小
             resizeCanvas();
             
@@ -1405,7 +1407,6 @@ your-project/
                     const index = y * canvasSize + x;
                     if (grid[index] !== 'air' && images[grid[index]]) {
                         const img = images[grid[index]];
-                        ctx.imageSmoothingEnabled = false;
                         ctx.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize);
                     }
                 }
