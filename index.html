@@ -1405,6 +1405,7 @@ your-project/
                     const index = y * canvasSize + x;
                     if (grid[index] !== 'air' && images[grid[index]]) {
                         const img = images[grid[index]];
+                        ctx.imageSmoothingEnabled = false;
                         ctx.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize);
                     }
                 }
