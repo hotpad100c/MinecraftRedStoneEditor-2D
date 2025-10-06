@@ -1,3 +1,10 @@
+# 关于
+
+这个项目的原作者是ZXBHELLO。
+这个项目相当不错，本fork的核心意义是进行部分问题解决与功能增加。
+新的功能/修复将在此列出：
+- 2025/10/6 解决图像渲染模糊问题
+
 # Minecraft RedStone Editor 2D
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
