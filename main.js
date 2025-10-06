@@ -16,9 +16,9 @@ const canvasSize = 64; // 64x64网格
         function initCanvas() {
             canvas = document.getElementById('canvas');
             ctx = canvas.getContext('2d');
+            ctx.imageSmoothingEnabled = false;
             ctx.webkitImageSmoothingEnabled = false;
             ctx.mozImageSmoothingEnabled = false;
-            ctx.imageSmoothingEnabled = false;
             // 设置画布尺寸为容器大小
             resizeCanvas();
             
