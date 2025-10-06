@@ -1,6 +1,6 @@
 const canvasSize = 64; // 64x64网格
         const tileSize = 30; // 每个网格30像素
-        const grid = new Array(canvasSize * canvasSize).fill('air');
+        let grid = {}; // 稀疏矩阵，x,y => ID
         let selectedComponent = 'air';
         let canvasScale = 1.0; // 初始缩放100%
         let offsetX = 0, offsetY = 0;
@@ -95,14 +95,12 @@ const canvasSize = 64; // 64x64网格
             const visibleEndY = Math.min(canvasSize, Math.ceil((canvas.height - offsetY) / (tileSize * canvasScale)) + 1);
             
             // 绘制组件
-            for (let y = visibleStartY; y < visibleEndY; y++) {
-                for (let x = visibleStartX; x < visibleEndX; x++) {
-                    const index = y * canvasSize + x;
-                    if (grid[index] !== 'air' && images[grid[index]]) {
-                        const img = images[grid[index]];
+            for (const [key, compId] of Object.entries(grid)) {
+                    const [x, y] = key.split(',').map(Number);
+                    if (x >= visibleStartX && x < visibleEndX && y >= visibleStartY && y < visibleEndY && images[compId]) {
+                        const img = images[compId];
                         ctx.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize);
                     }
-                }
             }
             
             // 恢复状态
@@ -145,15 +143,13 @@ const canvasSize = 64; // 64x64网格
                 
                 // 检查是否在网格内
                 if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
-                    const index = gridY * canvasSize + gridX;
-                    
-                    // 放置或移除组件
-                    if (grid[index] === selectedComponent) {
-                        grid[index] = 'air'; // 移除
-                    } else {
-                        grid[index] = selectedComponent; // 放置
-                        hasChanges = true;
+                    const key = `${gridX},${gridY}`;
+                    if(grid[key] === selectedComponent) {
+                       delete grid[key]; // 移除
+                    } else if (selectedComponent !== 'air') {
+                            grid[key] = selectedComponent; // 放置
                     }
+                    hasChanges = true;
                     
                     // 更新状态栏
                     updateStatusBar();
@@ -335,7 +331,7 @@ const canvasSize = 64; // 64x64网格
         // 更新状态栏
         function updateStatusBar() {
             // 计算已放置组件数量
-            const placedCount = grid.filter(comp => comp !== 'air').length;
+            const placedCount = Object.keys(grid).length;
             document.querySelector('#block-count span').textContent = `已放置: ${placedCount} 个组件`;
         }
         
@@ -612,7 +608,7 @@ const canvasSize = 64; // 64x64网格
         
         // 清空画布
         function clearCanvas() {
-            grid.fill('air');
+            grid = {};
             updateStatusBar();
             hasChanges = true;
             closeAllModals();
@@ -683,16 +679,17 @@ const canvasSize = 64; // 64x64网格
                     const designData = JSON.parse(e.target.result);
                     
                     // 验证数据
-                    if (!designData.grid || !Array.isArray(designData.grid)) {
-                        throw new Error('无效的设计文件格式');
+                    if (!designData.grid || typeof designData.grid !== 'object') {
+                            throw new Error('无效的设计文件格式');
                     }
-                    
-                    // 应用设计
-                    designData.grid.forEach((comp, index) => {
-                        if (index < grid.length) {
-                            grid[index] = comp;
-                        }
-                    });
+                        
+                   grid = {};
+                   for (const [key, comp] of Object.entries(designData.grid)) {
+                            const [x, y] = key.split(',').map(Number);
+                            if (x >= 0 && x < canvasSize && y >= 0 && y < canvasSize && comp !== 'air') {
+                                grid[key] = comp;
+                            }
+                    }
                     
                     if (designData.scale) canvasScale = designData.scale;
                     if (designData.offsetX) offsetX = designData.offsetX;
