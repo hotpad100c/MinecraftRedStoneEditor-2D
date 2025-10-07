@@ -10,6 +10,7 @@
 - 2025/10/7 尝试兼容触屏
 - 2025/10/7 现在支持更多格式的贴图了
 - 2025/10/7 修证贴图问题
+- 2025/10/7 分离js以更好地维护
   
 
 测试地址：https://hotpad100c.github.io/MinecraftRedStoneEditor-2D/
