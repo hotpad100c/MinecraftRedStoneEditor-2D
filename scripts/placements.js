@@ -34,6 +34,11 @@ function checkConnectedPlacement(x, y, block) {
     stickypistonheadr: { dx: -1, dy: 0, body: "stickypistonbodyr" },
   };
 
+  const doubleChests = {
+    chestdl: { dx: 1, dy: 0, pair: "chestdr" },
+    chestdr: { dx: -1, dy: 0, pair: "chestdl" },
+  };
+  
   const key = `${x},${y}`;
   const current = grid[key];
 
@@ -52,6 +57,11 @@ function checkConnectedPlacement(x, y, block) {
       setBlock(x + dx, y + dy, body);
     }
   }
+  else if (doubleChests[block]) {
+    const { dx, dy, pair } = doubleChests[block];
+    if (!grid[`${x + dx},${y + dy}`]) setBlock(x + dx, y + dy, pair);
+  }
+
   else if (!current) {
     for (const [body, { dx, dy, head }] of Object.entries(pistonPairs)) {
       if (grid[`${x - dx},${y - dy}`] === body && grid[`${x},${y}`] === undefined) {
@@ -61,6 +71,11 @@ function checkConnectedPlacement(x, y, block) {
     for (const [head, { dx, dy, body }] of Object.entries(pistonHeads)) {
       if (grid[`${x - dx},${y - dy}`] === head && grid[`${x},${y}`] === undefined) {
         setBlock(x - dx, y - dy, 'air');
+      }
+    }
+    for (const [chest, { dx, dy, pair }] of Object.entries(doubleChests)) {
+      if (grid[`${x - dx},${y - dy}`] === pair) {
+        setBlock(x - dx, y - dy, "air");
       }
     }
   }
