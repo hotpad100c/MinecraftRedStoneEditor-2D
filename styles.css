@@ -49,6 +49,7 @@ body {
     display: flex;
     flex-direction: column;
     transition: all 0.6s ease;
+    image-rendering: pixelated;
 }
 
 .header {
