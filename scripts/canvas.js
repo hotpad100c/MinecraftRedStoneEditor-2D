@@ -24,12 +24,27 @@ function resizeCanvas() {
   try {
     const container = document.getElementById('canvas-container');
     if (!container) throw new Error('Canvas container not found');
-    canvas.width = container.clientWidth;
-    canvas.height = container.clientHeight;
+
+    const dpr = window.devicePixelRatio || 1;
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    // 实际像素大小 = CSS 像素 * DPR
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+
+    // canvas 样式维持视觉大小
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+
+    // 调整绘制比例
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
   } catch (error) {
     displayError(`resizeCanvas error: ${error.message}`);
   }
 }
+
 
 function drawGrid() {
   try {
