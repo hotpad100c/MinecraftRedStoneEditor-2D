@@ -17,7 +17,11 @@
             <div class="loader-progress-bar" id="progress-bar"></div>
         </div>
     </div>
-   
+     <!-- 错误提示 -->
+    <div id="error-display" style="display: none; position: fixed; top: 10px; right: 10px; background: rgba(255, 0, 0, 0.8); color: white; padding: 10px; border-radius: 5px; z-index: 1000; max-width: 300px; font-size: 12px;">
+      <h3>错误日志</h3>
+      <div id="error-messages"></div>
+    </div>
     <!-- 资源缺失提示 -->
     <div class="resource-error" id="resource-error">
         <h2><i class="fas fa-exclamation-triangle"></i> 资源加载错误</h2>
