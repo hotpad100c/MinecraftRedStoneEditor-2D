@@ -161,14 +161,7 @@ function handleTouchEnd(e) {
     const touchDuration = Date.now() - touchStartTime;
     if (touchDuration < 200 && touchPending) {
       const { gridX, gridY } = touchPending;
-      const key = `${gridX},${gridY}`;
-      if (grid[key] === selectedComponent) {
-        delete grid[key];
-      } else if (selectedComponent !== 'air') {
-        grid[key] = selectedComponent;
-      }
-      hasChanges = true;
-      updateStatusBar();
+      setBlock(gridX,gridY,selectedComponent);
     }
     isDragging = false;
     canvas.style.cursor = 'default';
