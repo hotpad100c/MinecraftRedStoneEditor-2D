@@ -795,59 +795,62 @@ function preloadResources() {
     const loaderText = document.querySelector('.loader-text');
     let loadedCount = 0;
     const totalCount = allComponents.length;
+
     function updateProgress() {
       loadedCount++;
       const progress = (loadedCount / totalCount) * 100;
       progressBar.style.width = `${progress}%`;
       loaderText.textContent = `正在加载红石组件资源... (${loadedCount}/${totalCount})`;
     }
-    allComponents.forEach(comp => {
+
+    function checkAllResourcesLoaded() {
+      if (loadedCount === totalCount) {
+        isResourceLoaded = true;
+        setTimeout(() => {
+          document.getElementById('resource-loader').style.opacity = '0';
+          setTimeout(() => {
+            document.getElementById('resource-loader').style.display = 'none';
+            loadComponents();
+            initCanvas();
+          }, 500);
+        }, 300);
+        const missingResources = allComponents.filter(c => !images[c.id]);
+        if (missingResources.length > 0) {
+          document.getElementById('resource-error').style.display = 'flex';
+          document.getElementById('resource-loader').style.display = 'none';
+          displayError(`Failed to load resources: ${missingResources.map(c => c.id).join(', ')}`);
+        }
+      }
+    }
+
+    function tryLoadImage(comp, formats, index = 0) {
+      if (index >= formats.length) {
+        console.error(`无法加载资源: ${comp.id} (${formats.join(', ')})`);
+        images[comp.id] = null;
+        updateProgress();
+        checkAllResourcesLoaded();
+        return;
+      }
+      const format = formats[index];
       const img = new Image();
       img.onload = () => {
         images[comp.id] = img;
         updateProgress();
-        if (loadedCount === totalCount) {
-          isResourceLoaded = true;
-          setTimeout(() => {
-            document.getElementById('resource-loader').style.opacity = '0';
-            setTimeout(() => {
-              document.getElementById('resource-loader').style.display = 'none';
-              loadComponents();
-              initCanvas();
-            }, 500);
-          }, 300);
-        }
+        checkAllResourcesLoaded();
       };
       img.onerror = () => {
-        console.error(`无法加载资源: assets/${comp.id}.webp`);
-        images[comp.id] = null;
-        updateProgress();
-        if (loadedCount === totalCount) {
-          isResourceLoaded = true;
-          const missingResources = allComponents.filter(c => !images[c.id]);
-          if (missingResources.length > 0) {
-            document.getElementById('resource-error').style.display = 'flex';
-            document.getElementById('resource-loader').style.display = 'none';
-            displayError(`Failed to load resources: ${missingResources.map(c => c.id).join(', ')}`);
-          } else {
-            setTimeout(() => {
-              document.getElementById('resource-loader').style.opacity = '0';
-              setTimeout(() => {
-                document.getElementById('resource-loader').style.display = 'none';
-                loadComponents();
-                initCanvas();
-              }, 500);
-            }, 300);
-          }
-        }
+        tryLoadImage(comp, formats, index + 1);
       };
-      img.src = `assets/${comp.id}.webp`;
+      img.src = `assets/${comp.id}.${format}`;
+    }
+
+    allComponents.forEach(comp => {
+      tryLoadImage(comp, ['webp', 'png', 'jpg']); // 格式支持
     });
   } catch (error) {
     displayError(`preloadResources error: ${error.message}`);
   }
 }
-
 // 处理页面关闭事件
 function handleBeforeUnload(e) {
   if (hasChanges) {
