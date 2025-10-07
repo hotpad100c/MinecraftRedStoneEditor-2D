@@ -285,6 +285,7 @@ body {
     cursor: default;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+    image-rendering-mode: optimize-speed; 
 }
 
 body.theme-dark .grid-overlay {
