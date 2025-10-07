@@ -17,10 +17,6 @@ function checkConnectedPlacement(x, y, block) {
     pistonbodyd: { dx: 0, dy: 1, head: "pistonheadd" },
     pistonbodyl: { dx: -1, dy: 0, head: "pistonheadl" },
     pistonbodyr: { dx: 1, dy: 0, head: "pistonheadr" },
-    stickypistonbodyu: { dx: 0, dy: -1, head: "stickypistonheadu" },
-    stickypistonbodyd: { dx: 0, dy: 1, head: "stickypistonheadd" },
-    stickypistonbodyl: { dx: -1, dy: 0, head: "stickypistonheadl" },
-    stickypistonbodyr: { dx: 1, dy: 0, head: "stickypistonheadr" },
   };
 
   const pistonHeads = {
@@ -28,10 +24,10 @@ function checkConnectedPlacement(x, y, block) {
     pistonheadd: { dx: 0, dy: -1, body: "pistonbodyd" },
     pistonheadl: { dx: 1, dy: 0, body: "pistonbodyl" },
     pistonheadr: { dx: -1, dy: 0, body: "pistonbodyr" },
-    stickypistonheadu: { dx: 0, dy: 1, body: "stickypistonbodyu" },
-    stickypistonheadd: { dx: 0, dy: -1, body: "stickypistonbodyd" },
-    stickypistonheadl: { dx: 1, dy: 0, body: "stickypistonbodyl" },
-    stickypistonheadr: { dx: -1, dy: 0, body: "stickypistonbodyr" },
+    stickypistonheadu: { dx: 0, dy: 1, body: "pistonbodyu" },
+    stickypistonheadd: { dx: 0, dy: -1, body: "pistonbodyd" },
+    stickypistonheadl: { dx: 1, dy: 0, body: "pistonbodyl" },
+    stickypistonheadr: { dx: -1, dy: 0, body: "pistonbodyr" },
   };
 
   const doubleChests = {
