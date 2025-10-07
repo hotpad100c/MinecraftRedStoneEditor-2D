@@ -89,6 +89,7 @@ function render() {
       const [x, y] = key.split(',').map(Number);
       if (x >= visibleStartX && x < visibleEndX && y >= visibleStartY && y < visibleEndY && images[compId]) {
         const img = images[compId];
+        ctx.imageSmoothingEnabled = false;
         ctx.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize);
       }
     }
