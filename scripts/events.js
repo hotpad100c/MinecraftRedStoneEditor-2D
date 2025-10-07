@@ -39,16 +39,8 @@ function handleMouseDown(e) {
       const y = e.clientY - rect.top;
       const gridX = Math.floor((x - offsetX) / (tileSize * canvasScale));
       const gridY = Math.floor((y - offsetY) / (tileSize * canvasScale));
-      if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
-        const key = `${gridX},${gridY}`;
-        if (grid[key] === selectedComponent) {
-          delete grid[key];
-        } else if (selectedComponent !== 'air') {
-          grid[key] = selectedComponent;
-        }
-        hasChanges = true;
-        updateStatusBar();
-      }
+
+      setBlock(gridX,gridY,selectedComponent);
     }
   } catch (error) {
     displayError(`handleMouseDown error: ${error.message}`);
