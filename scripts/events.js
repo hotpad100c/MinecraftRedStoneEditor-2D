@@ -153,8 +153,8 @@ function handleTouchMove(e) {
       const gridCenterY = (canvasY - offsetY) / (tileSize * initialCanvasScale);
 
       // 更新偏移量
-      offsetX = canvasX - gridCenterX * tileSize * canvasScale;
-      offsetY = canvasY - gridCenterY * tileSize * canvasScale;
+      //offsetX = canvasX - gridCenterX * tileSize * canvasScale;
+      //offsetY = canvasY - gridCenterY * tileSize * canvasScale;
 
       updateZoomDisplay();
     }
