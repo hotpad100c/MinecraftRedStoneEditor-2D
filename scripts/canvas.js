@@ -114,23 +114,43 @@ function resetCanvasPosition() {
     displayError(`resetCanvasPosition error: ${error.message}`);
   }
 }
-document.getElementById("save-screen").addEventListener("click", exportTransparentPNG);
 
-function exportTransparentPNG() {
+const screenshotBtn = document.getElementById("save-screen");
+const screenshotModal = document.getElementById("screenshot-modal");
+const previewCanvas = document.getElementById("screenshot-preview");
+const downloadBtn = document.getElementById("download-screenshot");
+
+screenshotBtn.addEventListener("click", openScreenshotPreview);
+
+function openScreenshotPreview() {
   const canvas = document.getElementById("canvas");
+  const scale = 2; // 导出倍率，可调整
+  previewCanvas.width = canvas.width * scale;
+  previewCanvas.height = canvas.height * scale;
+  const ctx = previewCanvas.getContext("2d");
+  ctx.scale(scale, scale);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(canvas, 0, 0);
 
-  const exportCanvas = document.createElement("canvas");
-  exportCanvas.width = canvas.width;
-  exportCanvas.height = canvas.height;
-  const exportCtx = exportCanvas.getContext("2d");
+  document.getElementById("screenshot-info").textContent =
+    `分辨率：${previewCanvas.width}×${previewCanvas.height}（透明背景）`;
 
-  exportCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
-  exportCtx.drawImage(canvas, 0, 0);
+  screenshotModal.style.display = "flex";
+  setTimeout(() => screenshotModal.classList.add("show"), 10);
+}
 
-  // 导出为透明 PNG
+downloadBtn.addEventListener("click", () => {
   const link = document.createElement("a");
   link.download = "redstone_screenshot.png";
-  link.href = exportCanvas.toDataURL("image/png");
+  link.href = previewCanvas.toDataURL("image/png");
   link.click();
-}
+});
+
+// 模态关闭逻辑复用现有按钮
+document.querySelectorAll("#screenshot-modal .close-modal").forEach(btn => {
+  btn.addEventListener("click", () => {
+    screenshotModal.classList.remove("show");
+    setTimeout(() => (screenshotModal.style.display = "none"), 300);
+  });
+});
 
