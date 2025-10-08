@@ -184,7 +184,7 @@ function loadComponents() {
         compDiv.className = 'component';
         compDiv.dataset.id = compData.id;
         compDiv.dataset.name = compData.name;
-        compDiv.dataset.pinyin = compData.pinyin;
+        compDiv.dataset.pinyin = pinyin.getFullChars(compData.name)
         if (images[compData.id]) {
           compDiv.innerHTML = `<img src="${images[compData.id].src}" alt="${compData.id}">`;
         } else {
