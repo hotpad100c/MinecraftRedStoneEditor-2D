@@ -139,22 +139,20 @@ function handleTouchMove(e) {
       const dy = touch1.clientY - touch2.clientY;
       const currentDistance = Math.sqrt(dx * dx + dy * dy);
       const scaleChange = currentDistance / initialTouchDistance;
-      const newScale = initialCanvasScale * scaleChange;
-      canvasScale = Math.max(0.1, Math.min(2.0, newScale));
+      const oldScale = canvasScale;
+      canvasScale = Math.max(0.1, Math.min(2.0, initialCanvasScale * scaleChange));
 
-      // 计算当前两指中心点
-      const centerX = (touch1.clientX + touch2.clientX) / 2;
-      const centerY = (touch1.clientY + touch2.clientY) / 2;
+      // 画布中心作为缩放锚点
+      const centerX = rect.left + canvas.width / 2;
+      const centerY = rect.top + canvas.height / 2;
       const canvasX = centerX - rect.left;
       const canvasY = centerY - rect.top;
 
-      // 计算缩放前的中心点
-      const gridCenterX = (canvasX - offsetX) / (tileSize * initialCanvasScale);
-      const gridCenterY = (canvasY - offsetY) / (tileSize * initialCanvasScale);
+      const gridCenterX = (canvasX - offsetX) / (tileSize * oldScale);
+      const gridCenterY = (canvasY - offsetY) / (tileSize * oldScale);
 
-      // 更新偏移量
-      //offsetX = canvasX - gridCenterX * tileSize * canvasScale;
-      //offsetY = canvasY - gridCenterY * tileSize * canvasScale;
+      offsetX = canvasX - gridCenterX * tileSize * canvasScale;
+      offsetY = canvasY - gridCenterY * tileSize * canvasScale;
 
       updateZoomDisplay();
     }
