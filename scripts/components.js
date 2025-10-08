@@ -178,14 +178,14 @@ function loadComponents() {
       const gridDiv = document.createElement('div');
       gridDiv.className = 'components-grid';
 
-      Pinyin.setOptions({checkPolyphone: false, charCase: 0});
+      const pinyin = new Pinyin({checkPolyphone: false, charCase: 0});
         
       comps.forEach(compData => {
         const compDiv = document.createElement('div');
         compDiv.className = 'component';
         compDiv.dataset.id = compData.id;
         compDiv.dataset.name = compData.name;
-        compDiv.dataset.pinyin = Pinyin.getFullChars(compData.name)
+        compDiv.dataset.pinyin = pinyin.getFullChars(compData.name)
         if (images[compData.id]) {
           compDiv.innerHTML = `<img src="${images[compData.id].src}" alt="${compData.id}">`;
         } else {
