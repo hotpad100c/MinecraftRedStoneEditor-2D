@@ -1,3 +1,4 @@
+import pinyin from 'js-pinyin';
 const components = {
     "基础方块": [
         {id: "air", name: "空气", pinyin: "kongqi"},
