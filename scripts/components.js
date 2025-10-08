@@ -116,6 +116,9 @@ const components = {
         {id: "tnt", name: "TNT", pinyin: "tnt"}
     ],
     "装饰方块": [
+        {id: "ender_chest", name: "末影箱", pinyin: "moyingxiang"},
+        {id: "moss", name: "苔藓", pinyin: "taixian"},
+        {id: "oak_log", name: "橡木原木", pinyin: "xiangmuyuanmu"},
         {id: "chest", name: "箱子", pinyin: "xiangzi"},
         {id: "chestdl", name: "双箱子（左）", pinyin: "shuangxiangzizuo"},
         {id: "chestdr", name: "双箱子（右）", pinyin: "shuangxiangziyou"},
