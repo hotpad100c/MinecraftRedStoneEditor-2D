@@ -124,7 +124,7 @@ screenshotBtn.addEventListener("click", openScreenshotPreview);
 
 function openScreenshotPreview() {
   const canvas = document.getElementById("canvas");
-  const scale = 2; // 导出倍率，可调整
+  const scale = 0.8; // 导出倍率，可调整
   previewCanvas.width = canvas.width * scale;
   previewCanvas.height = canvas.height * scale;
   const ctx = previewCanvas.getContext("2d");
