@@ -114,7 +114,7 @@ function resetCanvasPosition() {
     displayError(`resetCanvasPosition error: ${error.message}`);
   }
 }
-document.getElementById("export-screen").addEventListener("click", exportTransparentPNG);
+document.getElementById("save-screen").addEventListener("click", exportTransparentPNG);
 
 function exportTransparentPNG() {
   const canvas = document.getElementById("canvas");
