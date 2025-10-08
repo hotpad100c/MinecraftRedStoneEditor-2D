@@ -141,14 +141,21 @@ function handleTouchMove(e) {
       const scaleChange = currentDistance / initialTouchDistance;
       const newScale = initialCanvasScale * scaleChange;
       canvasScale = Math.max(0.1, Math.min(2.0, newScale));
+
+      // 计算当前两指中心点
       const centerX = (touch1.clientX + touch2.clientX) / 2;
       const centerY = (touch1.clientY + touch2.clientY) / 2;
       const canvasX = centerX - rect.left;
       const canvasY = centerY - rect.top;
+
+      // 计算缩放前的中心点
       const gridCenterX = (canvasX - offsetX) / (tileSize * initialCanvasScale);
       const gridCenterY = (canvasY - offsetY) / (tileSize * initialCanvasScale);
+
+      // 更新偏移量
       offsetX = canvasX - gridCenterX * tileSize * canvasScale;
       offsetY = canvasY - gridCenterY * tileSize * canvasScale;
+
       updateZoomDisplay();
     }
   } catch (error) {
