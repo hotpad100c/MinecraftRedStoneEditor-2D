@@ -114,3 +114,23 @@ function resetCanvasPosition() {
     displayError(`resetCanvasPosition error: ${error.message}`);
   }
 }
+document.getElementById("export-screen").addEventListener("click", exportTransparentPNG);
+
+function exportTransparentPNG() {
+  const canvas = document.getElementById("canvas");
+
+  const exportCanvas = document.createElement("canvas");
+  exportCanvas.width = canvas.width;
+  exportCanvas.height = canvas.height;
+  const exportCtx = exportCanvas.getContext("2d");
+
+  exportCtx.clearRect(0, 0, exportCanvas.width, exportCanvas.height);
+  exportCtx.drawImage(canvas, 0, 0);
+
+  // 导出为透明 PNG
+  const link = document.createElement("a");
+  link.download = "redstone_screenshot.png";
+  link.href = exportCanvas.toDataURL("image/png");
+  link.click();
+}
+
