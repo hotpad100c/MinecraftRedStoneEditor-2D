@@ -130,7 +130,7 @@ function openScreenshotPreview() {
   const ctx = previewCanvas.getContext("2d");
   ctx.scale(scale, scale);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(canvas, 0, 0);
+  ctx.drawImage(canvas, 0, 0);//绘制于导出缓冲区
 
   document.getElementById("screenshot-info").textContent =
     `分辨率：${previewCanvas.width}×${previewCanvas.height}（透明背景）`;
@@ -143,10 +143,9 @@ downloadBtn.addEventListener("click", () => {
   const link = document.createElement("a");
   link.download = "redstone_screenshot.png";
   link.href = previewCanvas.toDataURL("image/png");
-  link.click();
+  link.click();//下载
 });
 
-// 模态关闭逻辑复用现有按钮
 document.querySelectorAll("#screenshot-modal .close-modal").forEach(btn => {
   btn.addEventListener("click", () => {
     screenshotModal.classList.remove("show");
