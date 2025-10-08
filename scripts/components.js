@@ -117,7 +117,7 @@ const components = {
     ],
     "装饰方块": [
         {id: "ender_chest", name: "末影箱", pinyin: "moyingxiang"},
-        {id: "moss", name: "苔藓", pinyin: "taixian"},
+        {id: "moss_block", name: "苔藓", pinyin: "taixian"},
         {id: "oak_log", name: "橡木原木", pinyin: "xiangmuyuanmu"},
         {id: "cherry_leaves", name: "樱花树叶", pinyin: "yinghuashuye"},
         {id: "chiseled_bookshelf", name: "雕纹书架", pinyin: "diaowenshujia"},
