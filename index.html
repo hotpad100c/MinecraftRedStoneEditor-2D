@@ -125,6 +125,27 @@
             <i class="fas fa-adjust"></i> <span>模式: 日间模式</span>
         </div>
     </div>
+        <!-- 截图预览模态框 -->
+        <div class="modal" id="screenshot-modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2><i class="fas fa-camera"></i> 截图预览</h2>
+              <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+              <canvas id="screenshot-preview" style="max-width: 100%; border: 1px solid var(--border); border-radius: 8px;"></canvas>
+              <div id="screenshot-info" style="margin-top: 10px; color: var(--text); font-size: 0.9rem;"></div>
+            </div>
+            <div class="modal-footer">
+              <button class="modal-btn secondary-btn close-modal">
+                <i class="fas fa-times"></i> 关闭
+              </button>
+              <button class="modal-btn primary-btn" id="download-screenshot">
+                <i class="fas fa-download"></i> 下载PNG
+              </button>
+            </div>
+          </div>
+        </div>
    
     <!-- 保存模态框 -->
     <div class="modal" id="save-modal">
