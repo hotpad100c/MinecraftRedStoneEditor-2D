@@ -5,24 +5,7 @@ let initialTouchDistance = null;
 let initialCanvasScale = null;
 let touchCenterX = null, touchCenterY = null;
 let touchPending = null;
-let placeThrottle = null;
-
-function throttle(fn, delay) {
-  return function(...args) {
-    if (!placeThrottle) {
-      placeThrottle = setTimeout(() => {
-        fn.apply(this, args);
-        placeThrottle = null;
-      }, delay);
-    }
-  };
-}
-
-const throttledPlaceBlock = throttle((gridX, gridY) => {
-  if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
-    setBlock(gridX, gridY, selectedComponent);
-  }
-}, 50);
+let draggingPlancement = false;
 
 function setupCanvasEventListeners() {
   try {
@@ -35,7 +18,6 @@ function setupCanvasEventListeners() {
     canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
     canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
     canvas.addEventListener('touchend', handleTouchEnd);
-    
     window.addEventListener('resize', resizeCanvas);
   } catch (error) {
     displayError(`setupCanvasEventListeners error: ${error.message}`);
@@ -58,7 +40,8 @@ function handleMouseDown(e) {
       const y = e.clientY - rect.top;
       const gridX = Math.floor((x - offsetX) / (tileSize * canvasScale));
       const gridY = Math.floor((y - offsetY) / (tileSize * canvasScale));
-      setBlock(gridX, gridY, selectedComponent);
+
+      setBlock(gridX,gridY,selectedComponent);
     }
   } catch (error) {
     displayError(`handleMouseDown error: ${error.message}`);
@@ -106,6 +89,20 @@ function handleTouchStart(e) {
       dragStartX = touches[0].clientX - offsetX;
       dragStartY = touches[0].clientY - offsetY;
       canvas.style.cursor = 'grabbing';
+    } else if (touches.length === 2) {
+      isDragging = false;
+      const touch1 = touches[0];
+      const touch2 = touches[1];
+      const centerX = (touch1.clientX + touch2.clientX) / 2;
+      const centerY = (touch1.clientY + touch2.clientY) / 2;
+      const dx = touch1.clientX - touch2.clientX;
+      const dy = touch1.clientY - touch2.clientY;
+      initialTouchDistance = Math.sqrt(dx * dx + dy * dy);
+      initialCanvasScale = canvasScale;
+      touchCenterX = centerX;
+      touchCenterY = centerY;
+    }
+    if (touches.length === 1) {
       const x = touches[0].clientX - rect.left;
       const y = touches[0].clientY - rect.top;
       const gridX = Math.floor((x - offsetX) / (tileSize * canvasScale));
@@ -113,21 +110,6 @@ function handleTouchStart(e) {
       if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
         touchPending = { gridX, gridY };
       }
-    } else if (touches.length === 2) {
-      isDragging = true;
-      const touch1 = touches[0];
-      const touch2 = touches[1];
-      const centerX = (touch1.clientX + touch2.clientX) / 2;
-      const centerY = (touch1.clientY + touch2.clientY) / 2;
-      dragStartX = centerX - offsetX;
-      dragStartY = centerY - offsetY;
-      const dx = touch1.clientX - touch2.clientX;
-      const dy = touch1.clientY - touch2.clientY;
-      initialTouchDistance = Math.sqrt(dx * dx + dy * dy);
-      initialCanvasScale = canvasScale;
-      touchCenterX = centerX;
-      touchCenterY = centerY;
-      canvas.style.cursor = 'grabbing';
     }
   } catch (error) {
     displayError(`handleTouchStart error: ${error.message}`);
@@ -148,32 +130,32 @@ function handleTouchMove(e) {
       const gridY = Math.floor((y - offsetY) / (tileSize * canvasScale));
       if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
         document.querySelector('#cursor-position span').textContent = `坐标: ${gridX},${gridY}`;
-        throttledPlaceBlock(gridX, gridY);
       } else {
         document.querySelector('#cursor-position span').textContent = `坐标: 0,0`;
       }
-    } else if (touches.length === 2 && isDragging) {
+    } else if (touches.length === 2) {
       const touch1 = touches[0];
       const touch2 = touches[1];
-      const centerX = (touch1.clientX + touch2.clientX) / 2;
-      const centerY = (touch1.clientY + touch2.clientY) / 2;
       const dx = touch1.clientX - touch2.clientX;
       const dy = touch1.clientY - touch2.clientY;
       const currentDistance = Math.sqrt(dx * dx + dy * dy);
       const scaleChange = currentDistance / initialTouchDistance;
       const oldScale = canvasScale;
       canvasScale = Math.max(0.1, Math.min(2.0, initialCanvasScale * scaleChange));
-      if (canvasScale !== oldScale) {
-        const canvasX = centerX - rect.left;
-        const canvasY = centerY - rect.top;
-        const gridCenterX = (canvasX - offsetX) / (tileSize * oldScale);
-        const gridCenterY = (canvasY - offsetY) / (tileSize * oldScale);
-        offsetX = canvasX - gridCenterX * tileSize * canvasScale;
-        offsetY = canvasY - gridCenterY * tileSize * canvasScale;
-        updateZoomDisplay();
-      }
-      offsetX = centerX - dragStartX;
-      offsetY = centerY - dragStartY;
+
+      // 画布中心作为缩放锚点
+      const centerX = rect.left + canvas.width / 2;
+      const centerY = rect.top + canvas.height / 2;
+      const canvasX = centerX - rect.left;
+      const canvasY = centerY - rect.top;
+
+      const gridCenterX = (canvasX - offsetX) / (tileSize * oldScale);
+      const gridCenterY = (canvasY - offsetY) / (tileSize * oldScale);
+
+      offsetX = canvasX - gridCenterX * tileSize * canvasScale;
+      offsetY = canvasY - gridCenterY * tileSize * canvasScale;
+
+      updateZoomDisplay();
     }
   } catch (error) {
     displayError(`handleTouchMove error: ${error.message}`);
@@ -185,7 +167,7 @@ function handleTouchEnd(e) {
     const touchDuration = Date.now() - touchStartTime;
     if (touchDuration < 200 && touchPending) {
       const { gridX, gridY } = touchPending;
-      setBlock(gridX, gridY, selectedComponent);
+      setBlock(gridX,gridY,selectedComponent);
     }
     isDragging = false;
     canvas.style.cursor = 'default';
