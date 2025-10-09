@@ -133,7 +133,7 @@ function openScreenshotPreview() {
   ctx.drawImage(canvas, 0, 0);//绘制于导出缓冲区
 
   document.getElementById("screenshot-info").textContent =
-    `分辨率：${previewCanvas.width}×${previewCanvas.height}（透明背景）`;
+    `${previewCanvas.width}×${previewCanvas.height}`;
 
   screenshotModal.style.display = "flex";
   setTimeout(() => screenshotModal.classList.add("show"), 10);
