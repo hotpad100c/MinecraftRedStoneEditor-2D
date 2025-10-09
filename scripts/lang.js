@@ -6,7 +6,7 @@ async function loadLanguage(lang) {
         languageData = await response.json();
         applyLanguage();
     } catch (error) {
-        console.error('Failed to load language file:', error);
+        displayError(`load language file error: ${error.message}`);
     }
 }
 
@@ -44,7 +44,7 @@ function updateDynamicText(elementId, ...args) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadLanguage('zh');
+    loadLanguage('zh_cn');
 });
 
 window.updateDynamicText = updateDynamicText;
