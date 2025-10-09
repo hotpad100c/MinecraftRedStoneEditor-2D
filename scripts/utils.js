@@ -43,13 +43,11 @@ function setupDayNightToggle() {
       if (isLight) {
         document.body.classList.add('theme-dark');
         themeIcon.className = 'fas fa-sun';
-        themeText.textContent = '主题';
         themeDisplay.textContent = '夜间模式';
         localStorage.setItem('theme', 'dark');
       } else {
         document.body.classList.remove('theme-dark');
         themeIcon.className = 'fas fa-moon';
-        themeText.textContent = '主题';
         themeDisplay.textContent = '日间模式';
         localStorage.setItem('theme', 'light');
       }
@@ -69,12 +67,10 @@ function loadThemeFromStorage() {
     if (savedTheme === 'dark') {
       document.body.classList.add('theme-dark');
       themeIcon.className = 'fas fa-sun';
-      themeText.textContent = '主题';
       themeDisplay.textContent = '夜间模式';
     } else {
       document.body.classList.remove('theme-dark');
       themeIcon.className = 'fas fa-moon';
-      themeText.textContent = '主题';
       themeDisplay.textContent = '日间模式';
     }
   } catch (error) {
@@ -196,7 +192,7 @@ function preloadResources() {
       loadedCount++;
       const progress = (loadedCount / totalCount) * 100;
       progressBar.style.width = `${progress}%`;
-      loaderText.textContent = `正在加载红石组件资源... (${loadedCount}/${totalCount})`;
+      loaderText.textContent = `Loading... (${loadedCount}/${totalCount})`;
     }
 
     function checkAllResourcesLoaded() {
