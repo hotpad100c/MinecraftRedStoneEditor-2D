@@ -16,6 +16,7 @@
 - 2025/10/8 许可证文件补全了
 - 2025/10/8 让我们健康地使用已有的pinyin.js库。
 - 2025/10/9 多语言支持
+- 2025/10/10 退出时设计保存于本地存储
 
 
 测试地址：https://hotpad100c.github.io/MinecraftRedStoneEditor-2D/
