@@ -52,14 +52,19 @@ window.addEventListener("beforeunload", handleBeforeUnload);
 window.addEventListener('DOMContentLoaded', init);
 
 function handleBeforeUnload() {
-  const designData = {
-    name: "",
-    description: "",
-    grid: grid,
-    timestamp: new Date().toISOString(),
-    scale: canvasScale,
-    offsetX: offsetX,
-    offsetY: offsetY
-  };
-  localStorage.setItem("MREMap", JSON.stringify(designData));
+  try {
+    const designData = {
+      name: "temp",
+      description: "temp",
+      grid: grid,
+      timestamp: new Date().toISOString(),
+      scale: canvasScale,
+      offsetX: offsetX,
+      offsetY: offsetY
+    };
+    localStorage.setItem("MREMap", JSON.stringify(designData));
+  catch (error) {
+    statusElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> 错误: ${error.message}`;
+    displayError(`loadDesign parse error: ${error.message}`);
+  }
 }
