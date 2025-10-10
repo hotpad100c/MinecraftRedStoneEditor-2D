@@ -29,7 +29,10 @@ function checkConnectedPlacement(x, y, block) {
     stickypistonheadl: { dx: 1, dy: 0, body: "pistonbodyl" },
     stickypistonheadr: { dx: -1, dy: 0, body: "pistonbodyr" },
   };
-
+  const doorPairs = {
+    iron_door_bottom: { dx: 0, dy: -1, pair: "Iron_door_top" },
+    Iron_door_top: { dx: 0, dy: 1, pair: "iron_door_bottom" },
+  };
   const doubleChests = {
     chestdl: { dx: 1, dy: 0, pair: "chestdr" },
     chestdr: { dx: -1, dy: 0, pair: "chestdl" },
@@ -54,6 +57,10 @@ function checkConnectedPlacement(x, y, block) {
     }
   }
   else if (doubleChests[block]) {
+    const { dx, dy, pair } = doubleChests[block];
+    if (!grid[`${x + dx},${y + dy}`]) setBlock(x + dx, y + dy, pair);
+  }
+  else if (doorPairs[block]) {
     const { dx, dy, pair } = doubleChests[block];
     if (!grid[`${x + dx},${y + dy}`]) setBlock(x + dx, y + dy, pair);
   }
