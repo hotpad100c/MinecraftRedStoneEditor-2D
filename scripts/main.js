@@ -24,7 +24,10 @@ function init() {
 function loadDesignFromStorage() {
   try {
     const saved = localStorage.getItem("MREMap");
-    if (!saved) return;
+    if (!saved) {
+      displayError(`loadDesign parse error: no saved data.`);
+      return;
+    }
 
     const designData = JSON.parse(saved);
     if (!designData.grid || typeof designData.grid !== 'object') {
@@ -70,6 +73,7 @@ function handleBeforeUnload() {
     localStorage.setItem("MREMap", JSON.stringify(designData));
   } catch (error) {
     console.error("保存失败:", error);
+    displayError(`loadDesign parse error: ${error.message}`);
   }
 }
 
