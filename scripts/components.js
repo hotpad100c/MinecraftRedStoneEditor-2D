@@ -116,6 +116,11 @@ const components = {
         {id: "tnt", name: "TNT"}
     ],
     "装饰方块": [
+        {id: "Iron_door_top",       name: "铁门（上）"},
+        {id: "brewing_stand",       name: "酿造台"},
+        {id: "cave_vines_berries",  name: "洞穴藤蔓（有果实）"},
+        {id: "dead_coral_fan",      name: "失活的珊瑚扇"},
+        {id: "iron_door_bottom",    name: "铁门（下）"},
         {id: "ender_chest", name: "末影箱"},
         {id: "moss_block", name: "苔藓"},
         {id: "oak_log", name: "橡木原木"},
@@ -153,7 +158,8 @@ const components = {
         {id: "water", name: "水"},
         {id: "lava", name: "熔岩"},
         {id: "fire", name: "火"},
-        {id: "unknown", name: "未知方块"}
+        {id: "unknown", name: "未知方块"},
+        {id: "barrier", name: "屏障"}
     ]
 };
 
