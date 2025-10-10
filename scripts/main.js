@@ -65,6 +65,6 @@ function handleBeforeUnload() {
     localStorage.setItem("MREMap", JSON.stringify(designData));
   catch (error) {
     statusElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> 错误: ${error.message}`;
-    displayError(`loadDesign parse error: ${error.message}`);
+    displayError(`saving error: ${error.message}`);
   }
 }
