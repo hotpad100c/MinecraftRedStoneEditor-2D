@@ -49,6 +49,7 @@ function init() {
   }
 }
 
+window.addEventListener("beforeunload", handleBeforeUnload);
 window.addEventListener('DOMContentLoaded', init);
 
 function handleBeforeUnload() {
