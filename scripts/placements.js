@@ -1,7 +1,7 @@
 function setBlock(gridX, gridY, selectedComponent){
   if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
     const key = `${gridX},${gridY}`;
-    if (grid[key] === selectedComponent) {
+    if (grid[key] === selectedComponent || grid[key] === 'air') {
         delete grid[key];
     } else if (selectedComponent !== 'air') {
         grid[key] = selectedComponent;
@@ -61,7 +61,7 @@ function checkConnectedPlacement(x, y, block) {
     if (!grid[`${x + dx},${y + dy}`]) setBlock(x + dx, y + dy, pair);
   }
   else if (doorPairs[block]) {
-    const { dx, dy, pair } = doubleChests[block];
+    const { dx, dy, pair } = doorPairs[block];
     if (!grid[`${x + dx},${y + dy}`]) setBlock(x + dx, y + dy, pair);
   }
 
@@ -77,6 +77,11 @@ function checkConnectedPlacement(x, y, block) {
       }
     }
     for (const [chest, { dx, dy, pair }] of Object.entries(doubleChests)) {
+      if (grid[`${x - dx},${y - dy}`] === pair) {
+        setBlock(x - dx, y - dy, "air");
+      }
+    }
+    for (const [door, { dx, dy, pair }] of Object.entries(doorPairs)) {
       if (grid[`${x - dx},${y - dy}`] === pair) {
         setBlock(x - dx, y - dy, "air");
       }
