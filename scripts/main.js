@@ -15,7 +15,7 @@ function init() {
   } catch (error) {
     displayError(`init error: ${error.message}`);
   }
-
+  window.addEventListener("beforeunload", handleBeforeUnload);
   try {
     const saved = localStorage.getItem("MREMap");
     if (saved) {
@@ -48,7 +48,6 @@ function init() {
   }
 }
 
-window.addEventListener("beforeunload", handleBeforeUnload);
 window.addEventListener('DOMContentLoaded', init);
 
 function handleBeforeUnload() {
