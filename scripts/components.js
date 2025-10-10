@@ -116,7 +116,7 @@ const components = {
         {id: "tnt", name: "TNT"}
     ],
     "装饰方块": [
-        {id: "Iron_door_top",       name: "铁门（上）"},
+        {id: "iron_door_top",       name: "铁门（上）"},
         {id: "brewing_stand",       name: "酿造台"},
         {id: "cave_vines_berries",  name: "洞穴藤蔓（有果实）"},
         {id: "dead_coral_fan",      name: "失活的珊瑚扇"},
