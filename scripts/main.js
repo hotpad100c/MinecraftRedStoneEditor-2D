@@ -21,5 +21,17 @@ function init() {
 window.addEventListener('DOMContentLoaded', init);
 
 window.addEventListener("beforeunload", () => {
-  localStorage.setItem("MREMap", JSON.stringify(data)); 
+    const designName = document.getElementById('design-name').value.trim() || '未命名设计';
+    const designDescription = document.getElementById('design-description').value.trim();
+    const designData = {
+      name: designName,
+      description: designDescription,
+      grid: grid,
+      timestamp: new Date().toISOString(),
+      scale: canvasScale,
+      offsetX: offsetX,
+      offsetY: offsetY
+    };
+    const jsonData = JSON.stringify(designData);
+  localStorage.setItem("MREMap", JSON.stringify(jsonData)); 
 });
