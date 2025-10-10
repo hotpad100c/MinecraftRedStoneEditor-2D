@@ -21,11 +21,9 @@ function init() {
 window.addEventListener('DOMContentLoaded', init);
 
 window.addEventListener("beforeunload", () => {
-    const designName = document.getElementById('design-name').value.trim() || '未命名设计';
-    const designDescription = document.getElementById('design-description').value.trim();
     const designData = {
-      name: designName,
-      description: designDescription,
+      name: “”,
+      description: “”,
       grid: grid,
       timestamp: new Date().toISOString(),
       scale: canvasScale,
