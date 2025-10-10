@@ -10,7 +10,6 @@ function init() {
     loadThemeFromStorage();
     setupEventListeners();
     preloadResources();
-    window.addEventListener('beforeunload', handleBeforeUnload);
     updateStatusBar();
     resetCanvasPosition();
   } catch (error) {
