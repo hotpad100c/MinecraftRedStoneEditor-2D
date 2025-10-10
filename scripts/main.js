@@ -13,7 +13,7 @@ function init() {
     updateStatusBar();
     resetCanvasPosition();
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener("unload", handleBeforeUnload);
     loadDesignFromStorage();
 
   } catch (error) {
