@@ -30,8 +30,8 @@ function checkConnectedPlacement(x, y, block) {
     stickypistonheadr: { dx: -1, dy: 0, body: "pistonbodyr" },
   };
   const doorPairs = {
-    iron_door_bottom: { dx: 0, dy: -1, pair: "Iron_door_top" },
-    Iron_door_top: { dx: 0, dy: 1, pair: "iron_door_bottom" },
+    iron_door_bottom: { dx: 0, dy: -1, pair: "iron_door_top" },
+    iron_door_top: { dx: 0, dy: 1, pair: "iron_door_bottom" },
   };
   const doubleChests = {
     chestdl: { dx: 1, dy: 0, pair: "chestdr" },
