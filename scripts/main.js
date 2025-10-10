@@ -25,7 +25,6 @@ function loadDesignFromStorage() {
   try {
     const saved = localStorage.getItem("MREMap");
     if (!saved) {
-      displayError(`loadDesign parse error: no saved data.`);
       return;
     }
 
@@ -50,10 +49,8 @@ function loadDesignFromStorage() {
     updateZoomDisplay();
     closeAllModals();
     hasChanges = false;
-    statusElement.innerHTML = '<i class="fas fa-check-circle"></i> 设计导入成功！';
 
   } catch (error) {
-    statusElement.innerHTML = `<i class="fas fa-exclamation-circle"></i> 错误: ${error.message}`;
     displayError(`loadDesign parse error: ${error.message}`);
   }
 }
