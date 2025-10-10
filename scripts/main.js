@@ -19,3 +19,7 @@ function init() {
 }
 
 window.addEventListener('DOMContentLoaded', init);
+
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("MREMap", JSON.stringify(data)); 
+});
