@@ -1,7 +1,7 @@
 function setBlock(gridX, gridY, selectedComponent){
   if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
     const key = `${gridX},${gridY}`;
-    if (grid[key] === selectedComponent || grid[key] === 'air') {
+    if (grid[key] === selectedComponent || selectedComponent === 'air') {
         delete grid[key];
     } else if (selectedComponent !== 'air') {
         grid[key] = selectedComponent;
