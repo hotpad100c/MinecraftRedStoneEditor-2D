@@ -3,116 +3,123 @@ let offsetX = 0, offsetY = 0;
 let canvas, ctx;
 let animationFrameId;
 let images = {}; // 图集
+let particles = [];
 
 function initCanvas() {
-  try {
-    canvas = document.getElementById('canvas');
-    if (!canvas) throw new Error('Canvas element not found');
-    ctx = canvas.getContext('2d');
-    ctx.imageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    resizeCanvas();
-    setupCanvasEventListeners();
-    render();
-  } catch (error) {
-    displayError(`initCanvas error: ${error.message}`);
-  }
+    try {
+        canvas = document.getElementById('canvas');
+        if (!canvas) throw new Error('Canvas element not found');
+        ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+        ctx.webkitImageSmoothingEnabled = false;
+        ctx.mozImageSmoothingEnabled = false;
+        resizeCanvas();
+        setupCanvasEventListeners();
+        render();
+    } catch (error) {
+        displayError(`initCanvas error: ${error.message}`);
+    }
 }
 
 function resizeCanvas() {
-  try {
-    const container = document.getElementById('canvas-container');
-    if (!container) throw new Error('Canvas container not found');
+    try {
+        const container = document.getElementById('canvas-container');
+        if (!container) throw new Error('Canvas container not found');
 
-    const dpr = window.devicePixelRatio || 1;
-    const width = container.clientWidth;
-    const height = container.clientHeight;
+        const dpr = window.devicePixelRatio || 1;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
 
-    // 实际像素大小 = CSS 像素 * DPR
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
+        // 实际像素大小 = CSS 像素 * DPR
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
 
-    // canvas 样式维持视觉大小
-    canvas.style.width = width + 'px';
-    canvas.style.height = height + 'px';
+        // canvas 样式维持视觉大小
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
 
-    // 调整绘制比例
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
-  } catch (error) {
-    displayError(`resizeCanvas error: ${error.message}`);
-  }
+        // 调整绘制比例
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+    } catch (error) {
+        displayError(`resizeCanvas error: ${error.message}`);
+    }
 }
 
 
 function drawGrid() {
-  try {
-    const gridLineColor = getComputedStyle(document.documentElement).getPropertyValue('--grid-line').trim() || '#d1dbe6';
-    ctx.strokeStyle = gridLineColor;
-    ctx.lineWidth = 1 / canvasScale;
-    ctx.globalAlpha = 0.7;
-    const visibleStartX = Math.max(0, Math.floor((-offsetX / canvasScale) / tileSize) - 1);
-    const visibleEndX = Math.min(canvasSize, Math.ceil((canvas.width - offsetX) / (tileSize * canvasScale)) + 1);
-    const visibleStartY = Math.max(0, Math.floor((-offsetY / canvasScale) / tileSize) - 1);
-    const visibleEndY = Math.min(canvasSize, Math.ceil((canvas.height - offsetY) / (tileSize * canvasScale)) + 1);
-    ctx.beginPath();
-    for (let x = visibleStartX; x <= visibleEndX; x++) {
-      const pixelX = x * tileSize;
-      ctx.moveTo(pixelX, visibleStartY * tileSize);
-      ctx.lineTo(pixelX, visibleEndY * tileSize);
+    try {
+        const gridLineColor = getComputedStyle(document.documentElement).getPropertyValue('--grid-line').trim() || '#d1dbe6';
+        ctx.strokeStyle = gridLineColor;
+        ctx.lineWidth = 1 / canvasScale;
+        ctx.globalAlpha = 0.7;
+        const visibleStartX = Math.max(0, Math.floor((-offsetX / canvasScale) / tileSize) - 1);
+        const visibleEndX = Math.min(canvasSize, Math.ceil((canvas.width - offsetX) / (tileSize * canvasScale)) + 1);
+        const visibleStartY = Math.max(0, Math.floor((-offsetY / canvasScale) / tileSize) - 1);
+        const visibleEndY = Math.min(canvasSize, Math.ceil((canvas.height - offsetY) / (tileSize * canvasScale)) + 1);
+        ctx.beginPath();
+        for (let x = visibleStartX; x <= visibleEndX; x++) {
+            const pixelX = x * tileSize;
+            ctx.moveTo(pixelX, visibleStartY * tileSize);
+            ctx.lineTo(pixelX, visibleEndY * tileSize);
+        }
+        for (let y = visibleStartY; y <= visibleEndY; y++) {
+            const pixelY = y * tileSize;
+            ctx.moveTo(visibleStartX * tileSize, pixelY);
+            ctx.lineTo(visibleEndX * tileSize, pixelY);
+        }
+        ctx.stroke();
+        ctx.globalAlpha = 1.0;
+    } catch (error) {
+        displayError(`drawGrid error: ${error.message}`);
     }
-    for (let y = visibleStartY; y <= visibleEndY; y++) {
-      const pixelY = y * tileSize;
-      ctx.moveTo(visibleStartX * tileSize, pixelY);
-      ctx.lineTo(visibleEndX * tileSize, pixelY);
-    }
-    ctx.stroke();
-    ctx.globalAlpha = 1.0;
-  } catch (error) {
-    displayError(`drawGrid error: ${error.message}`);
-  }
 }
-
+let lastTime = performance.now();
 function render() {
-  try {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save();
-    ctx.translate(offsetX, offsetY);
-    ctx.scale(canvasScale, canvasScale);
-    drawGrid();
-    const visibleStartX = Math.max(0, Math.floor((-offsetX / canvasScale) / tileSize) - 1);
-    const visibleEndX = Math.min(canvasSize, Math.ceil((canvas.width - offsetX) / (tileSize * canvasScale)) + 1);
-    const visibleStartY = Math.max(0, Math.floor((-offsetY / canvasScale) / tileSize) - 1);
-    const visibleEndY = Math.min(canvasSize, Math.ceil((canvas.height - offsetY) / (tileSize * canvasScale)) + 1);
-    for (const [key, compId] of Object.entries(grid)) {
-      const [x, y] = key.split(',').map(Number);
-      if (x >= visibleStartX && x < visibleEndX && y >= visibleStartY && y < visibleEndY && images[compId]) {
-        const img = images[compId];
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize);
-      }
+    try {
+        const now = performance.now();
+        const deltaTime = now - lastTime;
+        lastTime = now;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(offsetX, offsetY);
+        ctx.scale(canvasScale, canvasScale);
+        drawGrid();
+        const visibleStartX = Math.max(0, Math.floor((-offsetX / canvasScale) / tileSize) - 1);
+        const visibleEndX = Math.min(canvasSize, Math.ceil((canvas.width - offsetX) / (tileSize * canvasScale)) + 1);
+        const visibleStartY = Math.max(0, Math.floor((-offsetY / canvasScale) / tileSize) - 1);
+        const visibleEndY = Math.min(canvasSize, Math.ceil((canvas.height - offsetY) / (tileSize * canvasScale)) + 1);
+        for (const [key, compId] of Object.entries(grid)) {
+            const [x, y] = key.split(',').map(Number);
+            if (x >= visibleStartX && x < visibleEndX && y >= visibleStartY && y < visibleEndY && images[compId]) {
+                const img = images[compId];
+                ctx.imageSmoothingEnabled = false;
+                ctx.drawImage(img, x * tileSize, y * tileSize, tileSize, tileSize);
+            }
+        }
+
+        updateParticles(deltaTime);
+        drawParticles(ctx);
+        ctx.restore();
+        animationFrameId = requestAnimationFrame(render);
+    } catch (error) {
+        displayError(`render error: ${error.message}`);
+        cancelAnimationFrame(animationFrameId);
     }
-    ctx.restore();
-    animationFrameId = requestAnimationFrame(render);
-  } catch (error) {
-    displayError(`render error: ${error.message}`);
-    cancelAnimationFrame(animationFrameId);
-  }
 }
 
 function resetCanvasPosition() {
-  try {
-    canvasScale = 1.0;
-    const container = document.getElementById('canvas-container');
-    const canvasWidth = canvasSize * tileSize * canvasScale;
-    const canvasHeight = canvasSize * tileSize * canvasScale;
-    offsetX = (container.clientWidth - canvasWidth) / 2;
-    offsetY = (container.clientHeight - canvasHeight) / 2;
-    updateZoomDisplay();
-  } catch (error) {
-    displayError(`resetCanvasPosition error: ${error.message}`);
-  }
+    try {
+        canvasScale = 1.0;
+        const container = document.getElementById('canvas-container');
+        const canvasWidth = canvasSize * tileSize * canvasScale;
+        const canvasHeight = canvasSize * tileSize * canvasScale;
+        offsetX = (container.clientWidth - canvasWidth) / 2;
+        offsetY = (container.clientHeight - canvasHeight) / 2;
+        updateZoomDisplay();
+    } catch (error) {
+        displayError(`resetCanvasPosition error: ${error.message}`);
+    }
 }
 
 const screenshotBtn = document.getElementById("save-screen");
@@ -123,33 +130,60 @@ const downloadBtn = document.getElementById("download-screenshot");
 screenshotBtn.addEventListener("click", openScreenshotPreview);
 
 function openScreenshotPreview() {
-  const canvas = document.getElementById("canvas");
-  const scale = 0.8; // 导出倍率，可调整
-  previewCanvas.width = canvas.width * scale;
-  previewCanvas.height = canvas.height * scale;
-  const ctx = previewCanvas.getContext("2d");
-  ctx.scale(scale, scale);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(canvas, 0, 0);//绘制于导出缓冲区
+    const canvas = document.getElementById("canvas");
+    const scale = 0.8; // 导出倍率，可调整
+    previewCanvas.width = canvas.width * scale;
+    previewCanvas.height = canvas.height * scale;
+    const ctx = previewCanvas.getContext("2d");
+    ctx.scale(scale, scale);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(canvas, 0, 0);//绘制于导出缓冲区
 
-  document.getElementById("screenshot-info").textContent =
-    `${previewCanvas.width}×${previewCanvas.height}`;
+    document.getElementById("screenshot-info").textContent =
+        `${previewCanvas.width}×${previewCanvas.height}`;
 
-  screenshotModal.style.display = "flex";
-  setTimeout(() => screenshotModal.classList.add("show"), 10);
+    screenshotModal.style.display = "flex";
+    setTimeout(() => screenshotModal.classList.add("show"), 10);
 }
 
 downloadBtn.addEventListener("click", () => {
-  const link = document.createElement("a");
-  link.download = "redstone_screenshot.png";
-  link.href = previewCanvas.toDataURL("image/png");
-  link.click();//下载
+    const link = document.createElement("a");
+    link.download = "redstone_screenshot.png";
+    link.href = previewCanvas.toDataURL("image/png");
+    link.click();//下载
 });
 
 document.querySelectorAll("#screenshot-modal .close-modal").forEach(btn => {
-  btn.addEventListener("click", () => {
-    screenshotModal.classList.remove("show");
-    setTimeout(() => (screenshotModal.style.display = "none"), 300);
-  });
+    btn.addEventListener("click", () => {
+        screenshotModal.classList.remove("show");
+        setTimeout(() => (screenshotModal.style.display = "none"), 300);
+    });
 });
+function updateParticles(deltaTime) {
+    const gravity = 0.0025 * deltaTime;
+    const drag = 0.998;
+
+    for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.age += deltaTime;
+        if (p.age >= p.life) {
+            particles.splice(i, 1);
+            continue;
+        }
+
+        p.vy += gravity * (deltaTime / 16);
+        p.vx *= Math.pow(drag, deltaTime/16);
+        p.vy *= Math.pow(drag, deltaTime/16);
+
+        p.x += p.vx * (deltaTime / 16);
+        p.y += p.vy * (deltaTime / 16);
+    }
+}
+function drawParticles(ctx) {
+    for (let p of particles) {
+        const alpha = 1 - (p.age / p.life);
+        ctx.fillStyle = p.color.replace(/[\d\.]+\)$/g, alpha + ')');
+        ctx.fillRect(p.x - p.size/2, p.y - p.size/2, p.size, p.size);
+    }
+}
 

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Minecraft 模型浏览器 Demo</title>
+    <style>
+        body{margin:0; display:flex; height:100vh;}
+        #list{width:200px; overflow:auto; background:#eee; padding:10px;}
+        #viewer{flex:1;}
+        li{cursor:pointer; margin-bottom:5px;}
+    </style>
+</head>
+<body>
+<ul id="list"></ul>
+<div id="viewer"></div>
+
+<!-- 引用 Three.js -->
+<script src="https://cdn.jsdelivr.net/npm/@vladkrutenyuk/three-umd/dist/three.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@vladkrutenyuk/three-umd/dist/addons/controls/OrbitControls.umd.js"></script>
+<script src="/test.js"></script>
+</body>
+</html>

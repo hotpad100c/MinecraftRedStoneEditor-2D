@@ -1,9 +1,11 @@
 function setBlock(gridX, gridY, selectedComponent){
   if (gridX >= 0 && gridX < canvasSize && gridY >= 0 && gridY < canvasSize) {
     const key = `${gridX},${gridY}`;
-    if (grid[key] === selectedComponent || selectedComponent === 'air') {
+    if (grid[key] === selectedComponent || (selectedComponent === 'air')) {
+        spawnParticlesFromImage(images[grid[key]], gridX, gridY);
         delete grid[key];
     } else if (selectedComponent !== 'air') {
+        spawnParticlesFromImage(images[grid[key]], gridX, gridY);
         grid[key] = selectedComponent;
     }
     checkConnectedPlacement(gridX, gridY, selectedComponent);
@@ -87,4 +89,40 @@ function checkConnectedPlacement(x, y, block) {
       }
     }
   }
+}
+function spawnParticlesFromImage(img, worldX, worldY) {
+    try{
+        if(!img) return;
+
+        const particleCount = 10;
+
+        const imageData = img;
+
+        for (let i = 0; i < particleCount; i++) {
+            const px = Math.floor(Math.random() * img.width);
+            const py = Math.floor(Math.random() * img.height);
+            const index = (py * img.width + px) * 4;
+            const r = imageData[index];
+            const g = imageData[index+1];
+            const b = imageData[index+2];
+            const a = imageData[index+3] / 255;
+
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 1.5 + 0.5;
+            const vx = Math.cos(angle) * speed;
+            const vy = Math.sin(angle) * speed - 0.5; // 上抛一点
+
+            particles.push({
+                x: worldX,
+                y: worldY,
+                vx, vy,
+                color: `rgba(${r},${g},${b},${a})`,
+                size: Math.random() * 3 + 2,
+                life: 500 + Math.random()*500,
+                age: 0
+            });
+        }
+    } catch (error) {
+        displayError(`spawnParticle error: ${error.message}`);
+    }
 }

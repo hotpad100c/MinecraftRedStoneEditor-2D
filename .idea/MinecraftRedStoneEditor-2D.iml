@@ -6,7 +6,10 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="three.js" level="application" />
+    <orderEntry type="library" name="three-orbitcontrols" level="application" />
+    <orderEntry type="library" name="@vladkrutenyuk/three-umd" level="application" />
   </component>
 </module>
