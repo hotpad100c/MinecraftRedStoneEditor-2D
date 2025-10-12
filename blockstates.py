@@ -12,7 +12,7 @@ def main():
     for filename in os.listdir(BASE_DIR):
         if not filename.endswith(".json"):
             continue
-        if filename == "_all.json":
+        if filename == "blockstate_all.json":
             continue  # 避免读到自己
 
         path = os.path.join(BASE_DIR, filename)
@@ -26,7 +26,7 @@ def main():
         key = filename[:-5]  # 去掉 .json
         data[key] = content
 
-    # 写入 _all.json
+    # 写入 blockstate_all.json
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
